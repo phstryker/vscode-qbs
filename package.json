@@ -1,6 +1,6 @@
 {
-    "name": "qbs-tools",
-    "displayName": "Qbs",
+    "name": "qbs-tools-stryker",
+    "displayName": "Qbs (Stryker)",
     "description": "Qbs tools support for Visual Studio Code",
     "version": "2.1.8",
     "publisher": "qbs-community",
@@ -9,10 +9,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/denis-shienkov/vscode-qbs"
+        "url": "https://github.com/JBStryker/vscode-qbs"
     },
     "bugs": {
-        "url": "https://github.com/denis-shienkov/vscode-qbs/issues"
+        "url": "https://stryker-agile.atlassian.net/jira/software/c/projects/AITI/boards/22/backlog"
     },
     "homepage": "https://github.com/denis-shienkov/vscode-qbs",
     "keywords": [
