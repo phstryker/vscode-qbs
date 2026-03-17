@@ -364,7 +364,7 @@ class SelectDebuggerButton extends Button {
     public constructor() {
         super(localize('qbs.select.debugger.placeholder', 'Auto'),
             localize('qbs.select.debugger.tooltip', 'Click to Select the Launch Configuration'),
-            vscode.StatusBarAlignment.Right, undefined, QbsCommandKey.SelectLaunchConfiguration);
+            vscode.StatusBarAlignment.Left, -101, QbsCommandKey.SelectLaunchConfiguration);
 
         QbsProjectManager.getInstance().onProjectOpen(async () => {
             this.disposable1?.dispose();
