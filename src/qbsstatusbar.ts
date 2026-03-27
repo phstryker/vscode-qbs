@@ -9,6 +9,7 @@ import { QbsBuildSystem } from './qbsbuildsystem';
 import { QbsCommandKey } from './datatypes/qbscommandkey';
 import { QbsLaunchConfigurationManager } from './qbslaunchconfigurationmanager';
 import { QbsProjectManager } from './qbsprojectmanager';
+import { isWorkspaceSolutionLocked, onWorkspaceSolutionLockChanged } from './qbsworkspacesolution';
 import { QbsSessionState } from './qbssession';
 
 const localize = nls.config({ messageFormat: nls.MessageFormat.file })();
@@ -76,13 +77,21 @@ class SessionStatusButton extends Button {
 }
 
 class SelectProjectButton extends Button {
+    private readonly disposableLock?: vscode.Disposable;
+
     public constructor() {
         super(localize('qbs.select.active.project.file.placeholder', 'N/A'),
             localize('qbs.select.active.project.file.tooltip', 'Click to Select the Active Project'),
             vscode.StatusBarAlignment.Left, -2, QbsCommandKey.LoadProject);
 
+        this.disposableLock = onWorkspaceSolutionLockChanged(() => this.update());
         QbsProjectManager.getInstance().onProjectOpen(async () => this.update());
         this.update();
+    }
+
+    public dispose(): void {
+        this.disposableLock?.dispose();
+        super.dispose();
     }
 
     private setText(text?: string): void {
@@ -91,6 +100,19 @@ class SelectProjectButton extends Button {
     }
 
     private update(): void {
+        const locked = isWorkspaceSolutionLocked();
+        if (locked) {
+            this.button.command = undefined;
+            this.button.color = new vscode.ThemeColor('descriptionForeground');
+            this.button.backgroundColor = undefined;
+            this.setTooltip(localize('qbs.select.active.project.file.tooltip.locked',
+                'The workspace pins the Qbs solution; project selection is disabled.'));
+        } else {
+            this.button.command = QbsCommandKey.LoadProject;
+            this.button.color = undefined;
+            this.button.backgroundColor = undefined;
+            this.setTooltip(localize('qbs.select.active.project.file.tooltip', 'Click to Select the Active Project'));
+        }
         this.setText(QbsProjectManager.getInstance().getProject()?.getName());
     }
 }

@@ -34,6 +34,13 @@ the previous Qbs project does not exists or the restore fails, the
 Qbs extension tries to set the first Qbs project file from the
 selected workspace folder as the active Qbs project.
 
+You can pin the workspace to a single Qbs solution (`*.sln.qbs`) so
+restore always opens that file and the **Qbs: Load Project** command is
+hidden. Set `qbs.workspaceSolutionFile` in workspace, folder, or
+multi-root `.code-workspace` settings to an existing path ending in
+`.sln.qbs` (absolute, or relative to the first workspace folder; you
+may use `${workspaceFolder}` in the value).
+
 The Qbs allows to have a multiple Qbs project files in the same
 directory. The user can choose one of them:
 

@@ -20,6 +20,7 @@ import { QbsProductType } from './datatypes/qbsproducttype';
 import { QbsProject } from './qbsproject';
 import { QbsProtocolProductData } from './protocol/qbsprotocolproductdata';
 import { QbsSettings } from './qbssettings';
+import { getLockedWorkspaceSolutionPath, isWorkspaceSolutionLocked } from './qbsworkspacesolution';
 
 import { QbsLaunchEnvironment } from './datatypes/qbsenvironment';
 import { QbsProcessEnvironment } from './datatypes/qbsenvironment';
@@ -140,6 +141,12 @@ export class QbsProjectManager implements vscode.Disposable {
     }
 
     private async restoreProject(): Promise<void> {
+        const lockedPath = getLockedWorkspaceSolutionPath();
+        if (lockedPath) {
+            await this.openProject(lockedPath);
+            return;
+        }
+
         const storage = this.context.workspaceState.get<any>(this.qbsStorageKey, {});
         let fsPath: string = storage[this.qbsLastOpenFsProjectKey];
         if (!fsPath || !fs.existsSync(fsPath)) {
@@ -152,6 +159,9 @@ export class QbsProjectManager implements vscode.Disposable {
     }
 
     private async selectProject(): Promise<void> {
+        if (isWorkspaceSolutionLocked())
+            return;
+
         interface QbsProjectQuickPickItem extends vscode.QuickPickItem {
             fsPath: string;
         }
