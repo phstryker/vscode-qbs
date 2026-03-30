@@ -1,7 +1,7 @@
 {
-    "name": "qbs-tools-stryker",
-    "displayName": "Qbs (Stryker)",
-    "description": "Qbs tools support for Visual Studio Code (Stryker fork)",
+    "name": "qbs-tools",
+    "displayName": "Qbs",
+    "description": "Qbs tools support for Visual Studio Code",
     "version": "2.1.8",
     "publisher": "qbs-community",
     "author": {
@@ -284,7 +284,7 @@
                 },
                 {
                     "command": "qbs.loadProject",
-                    "when": "qbs:extension-activated && !qbs:workspaceSolutionLocked"
+                    "when": "qbs:extension-activated"
                 },
                 {
                     "command": "qbs.rebuildProduct",
@@ -526,18 +526,6 @@
                     "description": "%qbs-tools.configuration.qbs.qbsPath.description%",
                     "scope": "resource"
                 },
-                "qbs.projectFileGlob": {
-                    "type": "string",
-                    "default": "**/*.sln.qbs",
-                    "description": "%qbs-tools.configuration.qbs.projectFileGlob.description%",
-                    "scope": "resource"
-                },
-                "qbs.workspaceSolutionFile": {
-                    "type": "string",
-                    "default": "",
-                    "description": "%qbs-tools.configuration.qbs.workspaceSolutionFile.description%",
-                    "scope": "resource"
-                },
                 "qbs.saveBeforeBuild": {
                     "type": "boolean",
                     "default": true,
@@ -568,7 +556,7 @@
             "activitybar": [
                 {
                     "id": "qbs-sidebar",
-                    "title": "Qbs (Stryker)",
+                    "title": "Qbs",
                     "icon": "res/qbs-view-icon.svg"
                 }
             ]
@@ -600,10 +588,10 @@
         "chai": "^4.3.0",
         "del": "^4.1.1",
         "glob": "^7.1.6",
-        "gulp": "^4.0.2",
         "gulp-filter": "^6.0.0",
         "gulp-sourcemaps": "^3.0.0",
         "gulp-typescript": "^5.0.1",
+        "gulp": "^4.0.2",
         "mocha": "^10.2.0",
         "run-sequence": "^2.2.1",
         "typescript": "^4.9.4",
@@ -613,7 +601,6 @@
     "dependencies": {
         "chokidar": "^3.5.1",
         "jsonc-parser": "^3.0.0",
-        "undici": "^7.22.0",
         "uuid": "^9.0.0",
         "vscode-cpptools": "^6.1.0",
         "vscode-languageclient": "^9.0.1",
