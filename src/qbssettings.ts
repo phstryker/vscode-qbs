@@ -36,6 +36,7 @@ export namespace QbsSettings {
         SettingsDirectory = 'settingsDirectory',
         ShowDisabledProjectItems = 'showDisabledProjectItems',
         ShowEmptyProjectGroups = 'showEmptyProjectGroups',
+        WorkspaceSolutionFile = 'workspaceSolutionFile',
     }
 
     export function observeSetting(field: SettingKey, callback: () => void): vscode.Disposable {
@@ -106,6 +107,14 @@ export namespace QbsSettings {
 
     export function getShowEmptyProjectGroups(): boolean {
         return getBoolean(SettingKey.ShowEmptyProjectGroups, true);
+    }
+
+    /** Returns optional path to a workspace `*.sln.qbs` file.
+     *  Uses a proper configuration scope so resource-scoped values resolve from `.code-workspace`
+     * `settings` (via `workspaceFile`) or from the first folder when no workspace file is open. */
+    export function getWorkspaceSolutionFile(): string {
+        const scope = vscode.workspace.workspaceFile ?? vscode.workspace.workspaceFolders?.[0]?.uri;
+        return vscode.workspace.getConfiguration(qbsSettingsSection, scope).get<string>(SettingKey.WorkspaceSolutionFile, '');
     }
 
     export function getClearOutputBeforeOperation(): boolean {

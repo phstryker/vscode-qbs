@@ -12,6 +12,7 @@ import { QbsProjectExplorer } from './projectexplorer/qbsprojectexplorer';
 import { QbsProjectManager } from './qbsprojectmanager';
 import { QbsStatusBar } from './qbsstatusbar';
 import { QbsTaskProvider } from './qbstaskprovider';
+import { QBS_WORKSPACE_SOLUTION_LOCKED_CONTEXT, refreshWorkspaceSolutionLockContext } from './qbsworkspacesolution';
 
 let extensionManager: QbsExtensionManager;
 
@@ -29,6 +30,13 @@ class QbsExtensionManager implements vscode.Disposable {
     private readonly taskProvider = vscode.tasks.registerTaskProvider(QbsTaskProvider.scriptType, new QbsTaskProvider());
 
     public constructor(private readonly context: vscode.ExtensionContext) {
+        this.context.subscriptions.push(vscode.workspace.onDidChangeConfiguration((e) => {
+            if (e.affectsConfiguration('qbs.workspaceSolutionFile'))
+                void refreshWorkspaceSolutionLockContext();
+        }));
+        this.context.subscriptions.push(vscode.workspace.onDidChangeWorkspaceFolders(() => {
+            void refreshWorkspaceSolutionLockContext();
+        }));
     }
 
     public dispose(): void {
@@ -58,6 +66,7 @@ export enum QbsExtensionKey {
 export async function activate(context: vscode.ExtensionContext) {
     console.log('Extension "qbs-tools" is now active!');
     await setContextValue(QbsExtensionKey.Activated, true);
+    await refreshWorkspaceSolutionLockContext();
     extensionManager = new QbsExtensionManager(context);
 
     await vscode.commands.executeCommand(QbsCommandKey.StartupCppCodeModel);
@@ -67,5 +76,6 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 export async function deactivate() {
+    await setContextValue(QBS_WORKSPACE_SOLUTION_LOCKED_CONTEXT, false);
     extensionManager.dispose();
 }
